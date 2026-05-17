@@ -154,3 +154,29 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('SkyTravel - сайт готов к работе!');
     console.log('Связь через Telegram: @Svman');
 });
+
+// Добавление хлебных крошек для SEO
+document.addEventListener('DOMContentLoaded', function() {
+    const breadcrumbs = document.createElement('nav');
+    breadcrumbs.setAttribute('aria-label', 'Хлебные крошки');
+    breadcrumbs.className = 'breadcrumbs';
+    breadcrumbs.innerHTML = `
+        <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+            <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                <a itemprop="item" href="https://t1ranxost.github.io/SkyTraver/">
+                    <span itemprop="name">Главная</span>
+                </a>
+                <meta itemprop="position" content="1" />
+            </li>
+            <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                <span itemprop="name">Туры и путешествия</span>
+                <meta itemprop="position" content="2" />
+            </li>
+        </ol>
+    `;
+    
+    const header = document.querySelector('.header .container');
+    if (header) {
+        header.after(breadcrumbs);
+    }
+});
