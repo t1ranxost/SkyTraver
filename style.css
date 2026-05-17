@@ -663,3 +663,723 @@ body.loaded .tour-card {
 ::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(#005f99, #0077be);
 }
+
+/* Кнопка входа в шапке */
+.login-button {
+    background: linear-gradient(135deg, #0077be, #00a8ff);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 119, 190, 0.3);
+    font-size: 1rem;
+}
+
+.login-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 119, 190, 0.4);
+    background: linear-gradient(135deg, #005f99, #0077be);
+}
+
+.login-icon {
+    font-size: 1.2rem;
+}
+
+/* Профиль пользователя */
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    padding: 8px 20px;
+    border-radius: 25px;
+    box-shadow: 0 2px 10px rgba(0, 119, 190, 0.1);
+}
+
+.user-avatar {
+    font-size: 1.5rem;
+}
+
+.user-name {
+    font-weight: 600;
+    color: #005f99;
+}
+
+.logout-btn {
+    background: #ff4444;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    background: #cc0000;
+    transform: scale(1.05);
+}
+
+/* Модальное окно */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    transform: scale(0.7);
+    transition: all 0.3s ease;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal-overlay.active .modal-content {
+    transform: scale(1);
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #666;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+    background: #f0f0f0;
+    color: #333;
+    transform: rotate(90deg);
+}
+
+.modal-icon {
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.modal-content h2 {
+    text-align: center;
+    color: #005f99;
+    margin-bottom: 10px;
+    font-size: 1.8rem;
+}
+
+.modal-content p {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+/* Форма входа */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.form-group label span {
+    margin-right: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.form-group input:focus {
+    border-color: #0077be;
+    box-shadow: 0 0 0 3px rgba(0, 119, 190, 0.1);
+}
+
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper input {
+    padding-right: 50px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 5px;
+    transition: all 0.3s ease;
+}
+
+.toggle-password:hover {
+    transform: translateY(-50%) scale(1.2);
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.remember-me input[type="checkbox"] {
+    width: auto;
+    cursor: pointer;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #0077be, #00a8ff);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-btn:hover {
+    background: linear-gradient(135deg, #005f99, #0077be);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 119, 190, 0.3);
+}
+
+.login-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.login-loader {
+    display: inline-block;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Сообщение об ошибке */
+.login-error {
+    background: #ffe6e6;
+    color: #cc0000;
+    padding: 12px;
+    border-radius: 10px;
+    margin-top: 20px;
+    text-align: center;
+    font-size: 0.9rem;
+    border: 1px solid #ffcccc;
+    animation: shakeError 0.5s ease;
+}
+
+@keyframes shakeError {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* Успешный вход */
+.login-success {
+    background: #e6ffe6;
+    color: #006600;
+    padding: 12px;
+    border-radius: 10px;
+    margin-top: 20px;
+    text-align: center;
+    font-size: 0.9rem;
+    border: 1px solid #ccffcc;
+}
+
+/* Подвал модального окна */
+.modal-footer {
+    margin-top: 30px;
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.modal-footer a {
+    color: #0077be;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.modal-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Адаптивность для модального окна */
+@media (max-width: 480px) {
+    .modal-content {
+        padding: 25px;
+        margin: 20px;
+    }
+    
+    .modal-content h2 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Контейнер для кнопок в шапке */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .header-actions {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+/* Панель администратора */
+.admin-panel-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 10001;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.admin-panel {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 800px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.admin-header h2 {
+    color: #005f99;
+    margin: 0;
+}
+
+.admin-close-btn {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #666;
+    transition: all 0.3s;
+}
+
+.admin-close-btn:hover {
+    color: #cc0000;
+    transform: rotate(90deg);
+}
+
+.admin-add-btn {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: all 0.3s;
+}
+
+.admin-add-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(40,167,69,0.3);
+}
+
+/* Форма редактирования */
+.tour-edit-form {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #dee2e6;
+}
+
+.tour-edit-form h3 {
+    color: #005f99;
+    margin-bottom: 15px;
+}
+
+.form-row {
+    margin-bottom: 15px;
+}
+
+.form-row label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-row input {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.form-row input:focus {
+    border-color: #0077be;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0,119,190,0.1);
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.save-btn {
+    background: linear-gradient(135deg, #0077be, #00a8ff);
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.save-btn:hover {
+    background: linear-gradient(135deg, #005f99, #0077be);
+}
+
+.cancel-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.cancel-btn:hover {
+    background: #5a6268;
+}
+
+/* Таблица туров */
+.admin-tours-list h3 {
+    color: #005f99;
+    margin-bottom: 15px;
+}
+
+.tour-admin-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    transition: all 0.3s;
+}
+
+.tour-admin-item:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transform: translateX(5px);
+}
+
+.tour-admin-info {
+    flex: 1;
+}
+
+.tour-admin-info h4 {
+    color: #005f99;
+    margin: 0 0 5px 0;
+}
+
+.tour-admin-info p {
+    margin: 2px 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.tour-admin-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-tour-btn, .delete-tour-btn {
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+}
+
+.edit-tour-btn {
+    background: #ffc107;
+    color: #333;
+}
+
+.edit-tour-btn:hover {
+    background: #ffb300;
+    transform: scale(1.05);
+}
+
+.delete-tour-btn {
+    background: #dc3545;
+    color: white;
+}
+
+.delete-tour-btn:hover {
+    background: #c82333;
+    transform: scale(1.05);
+}
+
+/* Кнопка входа в шапке */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-access-btn {
+    background: linear-gradient(135deg, #6f42c1, #8b5cf6);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.admin-access-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(111,66,193,0.3);
+}
+
+/* Кнопка управления для админа */
+.admin-access-btn {
+    background: linear-gradient(135deg, #6f42c1, #8b5cf6) !important;
+    color: white !important;
+    border: none !important;
+    padding: 5px 15px !important;
+    border-radius: 15px !important;
+    cursor: pointer !important;
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    white-space: nowrap;
+}
+
+.admin-access-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 5px 15px rgba(111, 66, 193, 0.3) !important;
+    background: linear-gradient(135deg, #5a32a3, #7c4dff) !important;
+}
+
+/* Стили для загрузки изображений */
+.image-upload-container {
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 15px;
+    background: white;
+}
+
+.image-preview {
+    width: 100%;
+    height: 200px;
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #f8f9fa;
+}
+
+.image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.no-image {
+    color: #adb5bd;
+    font-size: 1.1rem;
+}
+
+.image-tabs {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.image-tab {
+    padding: 8px 15px;
+    border: 1px solid #dee2e6;
+    background: white;
+    cursor: pointer;
+    border-radius: 5px 5px 0 0;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+}
+
+.image-tab.active {
+    background: #0077be;
+    color: white;
+    border-color: #0077be;
+}
+
+.image-tab-content {
+    padding: 10px 0;
+}
+
+.image-tab-content input[type="text"] {
+    width: calc(100% - 100px);
+    margin-right: 10px;
+}
+
+.load-image-btn {
+    padding: 10px 15px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.load-image-btn:hover {
+    background: #218838;
+}
+
+.help-text {
+    color: #6c757d;
+    font-size: 0.85rem;
+    margin-top: 5px;
+}
+
+.preset-images {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.preset-image {
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.preset-image:hover {
+    border-color: #0077be;
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.preset-image.selected {
+    border-color: #28a745;
+    background: #f0fff4;
+}
+
+.preset-image img {
+    width: 100%;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.preset-image span {
+    font-size: 0.85rem;
+    color: #495057;
+}
