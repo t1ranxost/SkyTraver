@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /SkyTraver/
+Disallow: /SkyTraver/admin/
+
+Sitemap: https://t1ranxost.github.io/SkyTraver/sitemap.xml
+Host: t1ranxost.github.io
