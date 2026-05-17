@@ -430,7 +430,6 @@ function createParticles() {
     }
 }
 
-// Функция для создания карточки тура
 function createTourCard(tour) {
     const card = document.createElement('div');
     card.className = 'tour-card';
@@ -439,8 +438,9 @@ function createTourCard(tour) {
     card.style.transition = 'all 0.5s ease';
     
     card.innerHTML = `
-        <div class="tour-image" style="background-image: url('${tour.image}')">
-            <span class="tour-badge">${tour.badge}</span>
+        <div class="tour-image" style="background-image: url('${tour.image || ''}')">
+            <span class="tour-badge">${tour.badge || ''}</span>
+            ${tour.city ? `<span class="tour-city">📍 ${tour.city}</span>` : ''}
         </div>
         <div class="tour-info">
             <h3>${tour.title}</h3>
@@ -458,7 +458,6 @@ function createTourCard(tour) {
     `;
     return card;
 }
-
 // Функция для отображения всех туров
 function displayTours() {
     const toursGrid = document.getElementById('toursGrid');
@@ -594,7 +593,7 @@ window.addEventListener('scroll', function() {
 });
 
 // ===== GOOGLE SHEETS ИНТЕГРАЦИЯ =====
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxzX3Jq3mKGh9lRnvixowwEmlKNjIucgqZjpNr2kC9WyRAS2JYNqSjHCLjtH8C9jfEo_w/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzyLqt53xM1xzB54mjUsllK0-BAXRidJ8LXuOPtU_JJCZaddiPixjPxBtTXr84UdsrXiA/exec';
 
 // Переменные для админ-панели
 let isAdminMode = false;
@@ -760,7 +759,6 @@ function hideAdminPanel() {
     }
 }
 
-// Отрисовка списка туров в админ-панели
 function renderAdminToursList() {
     const toursTable = document.getElementById('toursTable');
     if (!toursTable) return;
@@ -768,7 +766,7 @@ function renderAdminToursList() {
     toursTable.innerHTML = toursData.map(tour => `
         <div class="tour-admin-item">
             <div class="tour-admin-info">
-                <h4>${tour.title}</h4>
+                <h4>${tour.title} ${tour.city ? '— 📍 ' + tour.city : ''}</h4>
                 <p>⏱️ ${tour.duration} | 🏨 ${tour.hotel}</p>
                 <p>💰 ${tour.price} | 🏷️ ${tour.badge}</p>
             </div>
@@ -787,18 +785,29 @@ function editTour(id) {
     
     document.getElementById('editTourId').value = tour.id;
     document.getElementById('editTitle').value = tour.title;
+    document.getElementById('editCity').value = tour.city || '';
     document.getElementById('editDuration').value = tour.duration;
     document.getElementById('editHotel').value = tour.hotel;
     document.getElementById('editPrice').value = tour.price;
     document.getElementById('editBadge').value = tour.badge;
     
-    // Устанавливаем изображение
     currentTourImage = tour.image || '';
     document.getElementById('editImage').value = tour.image || '';
     updateImagePreview(tour.image);
     
     document.getElementById('formTitle').textContent = 'Редактирование тура';
     document.getElementById('tourEditForm').style.display = 'block';
+}
+
+// Очистка формы
+function clearImageForm() {
+    currentTourImage = '';
+    document.getElementById('editImage').value = '';
+    document.getElementById('editImageUrl').value = '';
+    document.getElementById('editImageFile').value = '';
+    document.getElementById('editCity').value = '';
+    updateImagePreview('');
+    document.querySelectorAll('.preset-image').forEach(p => p.classList.remove('selected'));
 }
 
 // Удаление тура
@@ -851,43 +860,70 @@ if (addBtn) {
         });
     }
     
-    // Обработчик для сохранения тура
-    const saveBtn = document.getElementById('saveTourBtn');
-    if (saveBtn) {
-        saveBtn.addEventListener('click', async function() {
-            const id = document.getElementById('editTourId').value;
-            // В функции сохранения тура измените создание объекта tour:
-const tour = {
-    id: id || Date.now().toString(),
-    title: title,
-    image: currentTourImage || document.getElementById('editImage').value || 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200"><rect fill="#87CEEB" width="400" height="120"/><rect fill="#FFE4B5" y="120" width="400" height="80"/></svg>'),
-    duration: document.getElementById('editDuration').value.trim() || '7 дней',
-    hotel: document.getElementById('editHotel').value.trim() || '5 звезд',
-    price: price,
-    badge: document.getElementById('editBadge').value.trim() || 'Новинка'
-};
-            
-            if (!tour.title || !tour.price) {
-                alert('Заполните обязательные поля: название и цена');
-                return;
-            }
-            
-            let success;
+// Обработчик для сохранения тура
+const saveBtn = document.getElementById('saveTourBtn');
+if (saveBtn) {
+    saveBtn.addEventListener('click', async function() {
+        const id = document.getElementById('editTourId').value;
+        
+        // Получаем значения из полей
+        const title = document.getElementById('editTitle').value.trim();
+        const price = document.getElementById('editPrice').value.trim();
+        
+        if (!title || !price) {
+            alert('Заполните обязательные поля: название и цена');
+            return;
+        }
+        
+        const tour = {
+            id: id || Date.now().toString(),
+            title: title,
+            city: document.getElementById('editCity').value.trim(),
+            image: currentTourImage || document.getElementById('editImage').value || '',
+            duration: document.getElementById('editDuration').value.trim() || '7 дней',
+            hotel: document.getElementById('editHotel').value.trim() || '5 звезд',
+            price: price,
+            badge: document.getElementById('editBadge').value.trim() || 'Новинка'
+        };
+        
+        // Блокируем кнопку на время сохранения
+        this.disabled = true;
+        this.textContent = '⏳ Сохранение...';
+        
+        let success;
+        if (id) {
+            success = await updateTourInGoogleSheets(tour);
+        } else {
+            success = await addTourToGoogleSheets(tour);
+        }
+        
+        // Разблокируем кнопку
+        this.disabled = false;
+        this.textContent = '💾 Сохранить';
+        
+        if (success) {
+            document.getElementById('tourEditForm').style.display = 'none';
+            renderAdminToursList();
+            alert('✅ Тур успешно сохранен!');
+        } else {
+            // Локальное сохранение
             if (id) {
-                success = await updateTourInGoogleSheets(tour);
+                const index = toursData.findIndex(t => t.id === id);
+                if (index !== -1) {
+                    toursData[index] = tour;
+                } else {
+                    toursData.push(tour);
+                }
             } else {
-                success = await addTourToGoogleSheets(tour);
+                toursData.push(tour);
             }
-            
-            if (success) {
-                document.getElementById('tourEditForm').style.display = 'none';
-                renderAdminToursList();
-                alert('Тур успешно сохранен!');
-            } else {
-                alert('Тур сохранен локально. Синхронизация с Google Sheets временно недоступна.');
-            }
-        });
-    }
+            displayTours();
+            renderAdminToursList();
+            document.getElementById('tourEditForm').style.display = 'none';
+            alert('⚠️ Тур сохранен локально. Проверьте подключение к Google Sheets.');
+        }
+    });
+}
     
     // Закрытие админ-панели по клику вне её
     const adminPanel = document.getElementById('adminPanel');
