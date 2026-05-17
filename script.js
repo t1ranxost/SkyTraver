@@ -56,10 +56,103 @@ const toursData = [
     }
 ];
 
+// Основная инициализация при загрузке DOM
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // ===== АНИМАЦИЯ ЗАГРУЗКИ =====
+    const loader = document.querySelector('.loader-wrapper');
+    const body = document.body;
+    
+    // Создаем частицы для фона
+    createParticles();
+    
+    // Имитация загрузки
+    let progress = 0;
+    const loadingInterval = setInterval(() => {
+        progress += Math.random() * 30;
+        if (progress > 100) progress = 100;
+        
+        const progressBar = document.querySelector('.loading-progress');
+        if (progressBar) {
+            progressBar.style.width = progress + '%';
+        }
+        
+        if (progress >= 100) {
+            clearInterval(loadingInterval);
+            
+            // Скрываем загрузчик
+            setTimeout(() => {
+                if (loader) {
+                    loader.classList.add('hidden');
+                    body.classList.add('loaded');
+                }
+                
+                // Удаляем загрузчик и частицы после анимации
+                setTimeout(() => {
+                    if (loader) {
+                        loader.remove();
+                    }
+                    const particles = document.getElementById('particles');
+                    if (particles) {
+                        particles.remove();
+                    }
+                }, 1000);
+            }, 500);
+        }
+    }, 400);
+    
+    // ===== ОТОБРАЖЕНИЕ ТУРОВ =====
+    displayTours();
+    
+    // ===== НАСТРОЙКА АНИМАЦИЙ =====
+    setupTourCardAnimations();
+    setupButtonAnimations();
+    setupSmoothScroll();
+    
+    console.log('SkyTravel - сайт готов к работе!');
+    console.log('Связь через Telegram: @Svman');
+});
+
+// Функция создания частиц
+function createParticles() {
+    const particlesContainer = document.getElementById('particles');
+    if (!particlesContainer) return;
+    
+    const colors = ['#0077be', '#00a8ff', '#005f99', '#b3e0ff'];
+    
+    for (let i = 0; i < 30; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        
+        const size = Math.random() * 8 + 3;
+        const startX = Math.random() * 100;
+        const delay = Math.random() * 3;
+        const duration = Math.random() * 3 + 2;
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        
+        particle.style.cssText = `
+            width: ${size}px;
+            height: ${size}px;
+            left: ${startX}%;
+            bottom: -10px;
+            background: ${color};
+            animation-delay: ${delay}s;
+            animation-duration: ${duration}s;
+            box-shadow: 0 0 ${size * 2}px ${color};
+        `;
+        
+        particlesContainer.appendChild(particle);
+    }
+}
+
 // Функция для создания карточки тура
 function createTourCard(tour) {
     const card = document.createElement('div');
     card.className = 'tour-card';
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(20px)';
+    card.style.transition = 'all 0.5s ease';
+    
     card.innerHTML = `
         <div class="tour-image" style="background-image: url('${tour.image}')">
             <span class="tour-badge">${tour.badge}</span>
@@ -73,7 +166,7 @@ function createTourCard(tour) {
             <div class="tour-price">
                 ${tour.price} <span>/чел.</span>
             </div>
-            <button class="book-btn" onclick="contactTelegram('${tour.title}', '${tour.price}')">
+            <button class="book-btn" data-tour="${tour.title}" data-price="${tour.price}">
                 Забронировать
             </button>
         </div>
@@ -87,10 +180,27 @@ function displayTours() {
     if (!toursGrid) return;
     
     toursGrid.innerHTML = '';
-    toursData.forEach(tour => {
+    toursData.forEach((tour, index) => {
         const tourCard = createTourCard(tour);
         toursGrid.appendChild(tourCard);
+        
+        // Анимация появления карточек
+        setTimeout(() => {
+            tourCard.style.opacity = '1';
+            tourCard.style.transform = 'translateY(0)';
+        }, 100 * index);
     });
+    
+    // Назначаем обработчики для кнопок "Забронировать"
+    setTimeout(() => {
+        document.querySelectorAll('.book-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tourTitle = this.getAttribute('data-tour');
+                const tourPrice = this.getAttribute('data-price');
+                contactTelegram(tourTitle, tourPrice);
+            });
+        });
+    }, 500);
 }
 
 // Функция для связи через Telegram
@@ -102,40 +212,90 @@ function contactTelegram(tourTitle, tourPrice) {
     window.open(telegramUrl, '_blank');
 }
 
-// Плавная прокрутка для навигации
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+// Настройка анимаций для карточек туров
+function setupTourCardAnimations() {
+    // Используем делегирование событий
+    document.addEventListener('mouseover', function(e) {
+        const card = e.target.closest('.tour-card');
+        if (card) {
+            card.style.transform = 'translateY(-10px) scale(1.02)';
+            card.style.transition = 'all 0.3s ease';
         }
     });
-});
-
-// Анимация при загрузке страницы
-window.addEventListener('load', () => {
-    displayTours();
     
-    // Анимация появления карточек
-    const cards = document.querySelectorAll('.tour-card');
-    cards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        card.style.transition = 'all 0.5s ease';
-        
-        setTimeout(() => {
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-        }, 100 * index);
+    document.addEventListener('mouseout', function(e) {
+        const card = e.target.closest('.tour-card');
+        if (card) {
+            card.style.transform = 'translateY(0) scale(1)';
+        }
     });
-});
+}
 
-// Анимация при скролле
-window.addEventListener('scroll', () => {
+// Настройка анимаций для кнопок
+function setupButtonAnimations() {
+    document.addEventListener('mouseover', function(e) {
+        const btn = e.target.closest('.btn-primary, .telegram-btn, .telegram-contact-btn, .book-btn');
+        if (btn) {
+            btn.style.transform = 'translateY(-3px)';
+            btn.style.boxShadow = '0 8px 25px rgba(0, 119, 190, 0.3)';
+        }
+    });
+    
+    document.addEventListener('mouseout', function(e) {
+        const btn = e.target.closest('.btn-primary, .telegram-btn, .telegram-contact-btn, .book-btn');
+        if (btn) {
+            btn.style.transform = 'translateY(0)';
+            btn.style.boxShadow = '';
+        }
+    });
+    
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.btn-primary, .telegram-btn, .telegram-contact-btn');
+        if (btn && !btn.classList.contains('book-btn')) {
+            e.preventDefault();
+            
+            // Создаем волновой эффект
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple';
+            btn.appendChild(ripple);
+            
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            ripple.style.left = `${x}px`;
+            ripple.style.top = `${y}px`;
+            ripple.style.width = ripple.style.height = `${Math.max(rect.width, rect.height)}px`;
+            
+            setTimeout(() => {
+                ripple.remove();
+                // Если это ссылка, переходим по ней
+                if (btn.tagName === 'A' && btn.getAttribute('href')) {
+                    window.open(btn.getAttribute('href'), btn.getAttribute('target') || '_self');
+                }
+            }, 600);
+        }
+    });
+}
+
+// Настройка плавной прокрутки
+function setupSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+}
+
+// Анимация при скролле для feature-карточек
+window.addEventListener('scroll', function() {
     const features = document.querySelectorAll('.feature-card');
     features.forEach(feature => {
         const featureTop = feature.getBoundingClientRect().top;
@@ -146,37 +306,4 @@ window.addEventListener('scroll', () => {
             feature.style.transform = 'translateY(0)';
         }
     });
-});
-
-// Инициализация
-document.addEventListener('DOMContentLoaded', () => {
-    displayTours();
-    console.log('SkyTravel - сайт готов к работе!');
-    console.log('Связь через Telegram: @Svman');
-});
-
-// Добавление хлебных крошек для SEO
-document.addEventListener('DOMContentLoaded', function() {
-    const breadcrumbs = document.createElement('nav');
-    breadcrumbs.setAttribute('aria-label', 'Хлебные крошки');
-    breadcrumbs.className = 'breadcrumbs';
-    breadcrumbs.innerHTML = `
-        <ol itemscope itemtype="https://schema.org/BreadcrumbList">
-            <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-                <a itemprop="item" href="https://t1ranxost.github.io/SkyTraver/">
-                    <span itemprop="name">Главная</span>
-                </a>
-                <meta itemprop="position" content="1" />
-            </li>
-            <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-                <span itemprop="name">Туры и путешествия</span>
-                <meta itemprop="position" content="2" />
-            </li>
-        </ol>
-    `;
-    
-    const header = document.querySelector('.header .container');
-    if (header) {
-        header.after(breadcrumbs);
-    }
 });
